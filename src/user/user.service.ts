@@ -26,14 +26,19 @@ export class UserService{
         return await this.userRepository.find()
     }
 
-    async adduser(user: UserObject): Promise<UserObject[]>{
-        users.push(user)
-        return users
+    async adduser(user: UserObject): Promise<UserEntity>{
+        const newUser: UserObject = {
+            name: user.name,
+            age: user.age,
+            city: user.city
+        }
+
+        return await this.userRepository.save(newUser)
     }
 
-    async updateuser(id: number, user: CreateUser): Promise<UserObject[]>{
+    async updateuser(id: number, user: CreateUser): Promise<UserEntity>{
         
-        const founduser = users.find((u) => u.id === id)
+        const founduser = await this.userRepository.findOneBy({id})
 
         if(!founduser){
             throw new BadRequestException("user not found")
@@ -43,11 +48,12 @@ export class UserService{
         founduser.age = user.age
         founduser.city = user.city ?? founduser.city
 
-        return users
+        await this.userRepository.update(id, founduser)
+        return founduser
     }
 
     async deleteuser(id: number): Promise<string>{
-        const founduser = users.find((u) => u.id === id)
+        const founduser = await this.userRepository.findOneBy({id})
         if(!founduser){
             throw new BadRequestException("User not found")
         }
