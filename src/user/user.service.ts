@@ -22,7 +22,7 @@ export class UserService{
     {}
 
 
-    async getallusers(): Promise<UserObject[]>{
+    async getallusers(): Promise<UserEntity[]>{
         return await this.userRepository.find()
     }
 
@@ -57,12 +57,12 @@ export class UserService{
         if(!founduser){
             throw new BadRequestException("User not found")
         }
-        users = users.filter((u) => u.id !== id)
+        await this.userRepository.delete(id)
         return "User deleted successfully"
     }
 
-    async getoneuser(id: number): Promise<UserObject>{
-        const founduser = users.find((u) => u.id === id)
+    async getoneuser(id: number): Promise<UserEntity>{
+        const founduser = await this.userRepository.findOneBy({id})
         
         if(!founduser){
             throw new BadRequestException("User not found")

@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserObject, CreateUser } from "./userobject";
+import { UserEntity } from "./entity/user.entity";
 
 
 @Controller("/user")
@@ -13,17 +14,17 @@ export class UserController{
     // }
 
     @Get("getusers")
-    async getuser(): Promise<UserObject[]>{
+    async getuser(): Promise<UserEntity[]>{
         return await this.userService.getallusers()
     }
 
     @Post("adduser")
-    async adduser(@Body() user: UserObject): Promise<UserObject[]>{
+    async adduser(@Body() user: UserObject): Promise<UserEntity>{
         return await this.userService.adduser(user)
     }
 
     @Put("updateuser/:id")
-    async updateuser(@Body() userbody: CreateUser, @Param("id", ParseIntPipe) id: number): Promise<UserObject[]>{
+    async updateuser(@Body() userbody: CreateUser, @Param("id", ParseIntPipe) id: number): Promise<UserEntity>{
         return await this.userService.updateuser(id, userbody)
     }
 
@@ -33,7 +34,7 @@ export class UserController{
     }
 
     @Get("getoneuser/:id")
-    async getoneuser(@Param("id", ParseIntPipe) id: number): Promise<UserObject>{
+    async getoneuser(@Param("id", ParseIntPipe) id: number): Promise<UserEntity>{
         return await this.userService.getoneuser(id)
     }
 }
